@@ -4,18 +4,20 @@ Username: jackson5
 
 ## Summary
 
-My solution is an ensemble of ten identical Deep Neural Networks (DNNs) using tensorlflow. 
+My solution is an ensemble of ten identical Deep Neural Networks (DNNs) built using tensorflow. 
 Each is trained using a combination of Label Distribution Learning (LDL) 
 and a novel model averaging algorithm I name 'FixedSoup' inspired by ['GreedySoup'](https://arxiv.org/pdf/2203.05482.pdf) algorithm.
 We construct the feature vectors using peak detection features alongside n-difference
 features inspired by the derivatives produced by the [SG algorithm](https://pubs.acs.org/doi/10.1021/ac60214a047) in analytical chemistry. 
-Indeed 'FixedSoup' improves the performance of a single model above the performance of an ensemble. 
+
+The final submission was produced by ensembling the models produced by `src/run_kfold_training.py`, which trains on both the `train` and `val` splits specified in `raw/metadata.csv`.
+For convenience I have provided `src/run_single_training.py` as a simple use case, which only trains on the `train` split.
 
 # Setup
 
-1. Create an environment using Python 3.8. The solution was originally run on Python 3.8.12. 
+1. Create an environment using Python 3.8. The solution was originally run on Python 3.8.16. 
 ```
-conda create --name example-submission python=3.8
+conda create --name ms2gs-submission python=3.8
 ```
 
 2. Install the required Python packages:
@@ -23,25 +25,41 @@ conda create --name example-submission python=3.8
 pip install -r requirements.txt
 ```
 
-3. Download the data from the competition page into `data/raw`
+3. Download the data from the competition page (and unzip) into `data/raw`
 
 The structure of the directory before running training or inference should be:
 ```
-example_submission
+Mars-Spectrometry-Gas-Chromatography
 ├── data
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│       ├── submission_format.csv
-│       ├── test_values.csv
+│   ├── processed      <- Output of training
+│   └── raw            <- The original data files
+│       ├── test_features
+│       │   ├── S0809.csv
+│       │   ├── S0810.csv
+│       │   ...
+│       ├── train_features
+│       │   ├── S0000.csv
+│       │   ...
+│       ├── val_features
+│       │   ├── S0809.csv
+│       │   ...
+│       ├── metadata.csv
 │       ├── train_labels.csv
-│       └── train_values.csv
-├── models             <- Trained and serialized models, model predictions, or model summaries
+│       ├── val_labels.csv
+│       └── submission_format.csv
+├── models             <- Pre-trained model weights in h5 format
+│   ├── s0.h5
+│   ├── s1.h5
+│   ...
 ├── src                <- Source code for use in this project.
 │   ├── __init__.py    <- Makes src a Python module
 │   ├── make_dataset.py
 │   ├── run_inference.py
-│   ├── run_training.py
-│   └── scorer.py
+│   ├── model.py
+│   ├── loss.py
+│   ├── run_kfold_training.py
+│   ├── training_utils.py
+│   └── run_single_training.py
 ├── README.md          <- The top-level README for developers using this project.
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment
 ├── Makefile           <- Makefile with commands like `make requirements`
@@ -50,46 +68,68 @@ example_submission
 
 # Hardware
 
-The solution was run on macOS Monterey, version 12.1.
+The solution was run on a Google colab notebook
 - Number of CPUs: 4
-- Processor: 2 GHz Quad-Core Intel Core i5
-- Memory: 16 GB 3733 MHz LPDDR4X
+- Processor: Intel(R) Xeon(R) CPU @ 2.20GHz
+- Memory: 12 GB 
+- GPU: Tesla T4
 
-Both training and inference were run on CPU.
-- Training time: ~2 minutes
-- Inference time: ~1.5 minutes
+Both training and inference were run on GPU.
+- Training time: ~2 hours
+- Inference time: ~1 hour
 
 # Run training
 
-To run training from the command line: `python src/run_training.py`
+To run training using from the command line: `python src/run_kfold_training.py`. 
 
 ```
-$ python src/run_training.py --help
-Usage: run_training.py [OPTIONS]
+$ python src/run_kfold_training.py --help
+Usage: run_kfold_training.py [OPTIONS]
 
 Options:
-  --features-path PATH            Path to the raw training dataset for
-                                  processing  [default:
-                                  data/raw/train_values.csv]
-  --labels-path PATH              Path to the training labels  [default:
-                                  data/raw/train_labels.csv]
-  --model-save-path PATH          Path to save the trained model weights
-                                  [default: models/random_forest.pkl]
-  --debug / --no-debug            Run on a small subset of the data for
-                                  debugging  [default: no-debug]
-  --help                          Show this message and exit.
+  --model-dir PATH        Directory to save the
+                          output model weights in
+                          npy format  [default:
+                          ../data/processed/]
+
+  --features-dir PATH     Path to the raw features
+                          [default: ../data/raw/]
+
+  --labels-dir PATH       Path to the train_labels
+                          csv and val_labels csv
+                          [default: ../data/raw/]
+
+  --metadata-path PATH    Path to the metadata csv
+                          [default: ../data/raw/me
+                          tadata.csv]
+
+  --n-folds INTEGER       Number of folds, Must be
+                          at least 2  [default:
+                          10]
+
+  --random-state INTEGER  Controls the randomness
+                          of each fold  [default:
+                          758625225]
+
+  --debug / --no-debug    Run on a small subset of
+                          the data and a two folds
+                          for debugging  [default:
+                          False]
+
+  --help                  Show this message and
+                          exit.
 ```
 
-By default, trained model weights will be saved to `models/random_forest.pkl`. The model weights file that is saved out is ~25 MB.
+By default, trained model weights will be saved to `data/processed` in npy format. The model weights file that is saved is 11 MB.
 
-Trained model weights can be downloaded from this Google folder: https://drive.google.com/drive/folders/1LW3PjXh_rL49VuEwj6oK5PuRM5nD5rPj?usp=sharing
-
-You can use `wget` to download the model weights programmatically:
-```
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1bmE9oVgi58deRdYicfBzNzNButfzjcjs' -O models/random_forest.pkl
-```
+To load the output weights use: `model.set_weights(np.load(your_weights.npy, allow_pickle=True))`
 
 # Run inference
+
+Trained model weights can be downloaded from this Google folder: https://drive.google.com/drive/folders/1ujIuxB5R62ik-5-5wg9gp5uvmR8qh57z?usp=sharing
+
+Ensure the weights are located in the `models` folder.
+
 
 To run inference from the command line: `python src/run_inference.py`
 
@@ -98,17 +138,45 @@ $ python src/run_inference.py --help
 Usage: run_inference.py [OPTIONS]
 
 Options:
-  --model-path PATH               Path to the saved model weights  [default:
-                                  models/random_forest.pkl]
-  --features-path PATH            Path to the test features  [default:
-                                  data/raw/test_values.csv]
-  --submission-save-path PATH     Path to save the generated submission
-                                  [default: data/processed/submission.csv]
-  --submission-format-path PATH   Path to the submission format csv  [default:
-                                  data/raw/submission_format.csv]
-  --debug / --no-debug            Run on a small subset of the data for
-                                  debugging  [default: no-debug]
-  --help                          Show this message and exit.
+  --model-dir PATH               Directory of the
+                                 saved model
+                                 weights
+                                 [default:
+                                 ../models/]
+
+  --features-path PATH           Path to the raw
+                                 features
+                                 [default:
+                                 ../data/raw/]
+
+  --submission-save-path PATH    Path to save the
+                                 generated
+                                 submission
+                                 [default: ../data
+                                 /processed/submis
+                                 sion.csv]
+
+  --submission-format-path PATH  Path to save the
+                                 submission format
+                                 csv  [default: ..
+                                 /data/raw/submiss
+                                 ion_format.csv]
+
+  --metadata-path PATH           Path to the
+                                 metadata csv
+                                 [default: ../data
+                                 /raw/metadata.csv
+                                 ]
+
+  --debug / --no-debug           Run on a small
+                                 subset of the
+                                 data and a single
+                                 model for
+                                 debugging
+                                 [default: False]
+
+  --help                         Show this message
+                                 and exit.
 ```
 
 By default, predictions will be saved out to `data/processed/submission.csv`.

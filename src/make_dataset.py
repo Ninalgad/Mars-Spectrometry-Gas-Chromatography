@@ -59,7 +59,7 @@ def add_diff_features(df):
     dx = intensity[1:] - intensity[:-1]
     df['dx'] = [0] + list(dx / 1000)
 
-    df = intensity[2:] - intensity[:-2]
+    dx = intensity[2:] - intensity[:-2]
     df['dxx'] = [0, 0] + list(dx / 1000)
 
     dx = intensity[1:] - intensity[:-1]
