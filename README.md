@@ -1,4 +1,4 @@
-# Writeup Prize Winning Solution - Mars Spectrometry 2: Gas Chromatography
+# 5th Place Winning Solution - Mars Spectrometry 2: Gas Chromatography
 
 Username: jackson5
 
