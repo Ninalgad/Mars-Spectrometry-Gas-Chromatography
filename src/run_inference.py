@@ -8,19 +8,19 @@ from src.make_dataset import make_dataset
 
 def main(
     model_dir: Path = typer.Option(
-        "../models/", help="Directory of the saved model weights"
+        "./models/", help="Directory of the saved model weights"
     ),
     features_path: Path = typer.Option(
-        "../data/raw/", help="Path to the raw features"
+        "./data/raw/", help="Path to the raw features"
     ),
     submission_save_path: Path = typer.Option(
-        "../data/processed/submission.csv", help="Path to save the generated submission"
+        "./data/processed/submission.csv", help="Path to save the generated submission"
     ),
     submission_format_path: Path = typer.Option(
-        "../data/raw/submission_format.csv", help="Path to save the submission format csv"
+        "./data/raw/submission_format.csv", help="Path to save the submission format csv"
     ),
     metadata_path: Path = typer.Option(
-        "../data/raw/metadata.csv", help="Path to the metadata csv"
+        "./data/raw/metadata.csv", help="Path to the metadata csv"
     ),
     debug: bool = typer.Option(
         False, help="Run on a small subset of the data and a single model for debugging"

@@ -86,7 +86,7 @@ The solution was run on a Google colab notebook
 - GPU: Tesla T4
 
 Both training and inference were run on GPU.
-- Training time: ~ 2 hours
+- Training time: ~ 6 hours
 - Inference time: ~ 15 mins
 
 # Run training
@@ -101,17 +101,17 @@ Options:
   --model-dir PATH        Directory to save the
                           output model weights in
                           npy format  [default:
-                          ../data/processed/]
+                          ./data/processed/]
 
   --features-dir PATH     Path to the raw features
-                          [default: ../data/raw/]
+                          [default: ./data/raw/]
 
   --labels-dir PATH       Path to the train_labels
                           csv and val_labels csv
-                          [default: ../data/raw/]
+                          [default: ./data/raw/]
 
   --metadata-path PATH    Path to the metadata csv
-                          [default: ../data/raw/me
+                          [default: ./data/raw/me
                           tadata.csv]
 
   --n-folds INTEGER       Number of folds, Must be
@@ -153,29 +153,29 @@ Options:
                                  saved model
                                  weights
                                  [default:
-                                 ../models/]
+                                 ./models/]
 
   --features-path PATH           Path to the raw
                                  features
                                  [default:
-                                 ../data/raw/]
+                                 ./data/raw/]
 
   --submission-save-path PATH    Path to save the
                                  generated
                                  submission
-                                 [default: ../data
+                                 [default: ./data
                                  /processed/submis
                                  sion.csv]
 
   --submission-format-path PATH  Path to save the
                                  submission format
-                                 csv  [default: ..
+                                 csv  [default: .
                                  /data/raw/submiss
                                  ion_format.csv]
 
   --metadata-path PATH           Path to the
                                  metadata csv
-                                 [default: ../data
+                                 [default: ./data
                                  /raw/metadata.csv
                                  ]
 

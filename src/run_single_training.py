@@ -9,16 +9,16 @@ from src.training_utils import train_fixed_soup
 
 def main(
         model_file: Path = typer.Option(
-            "../data/processed/single-model", help="File to the output model weights in npy format"
+            "./data/processed/single-model", help="File to the output model weights in npy format"
         ),
         features_dir: Path = typer.Option(
-            "../data/raw/", help="Path to the raw features"
+            "./data/raw/", help="Path to the raw features"
         ),
         labels_dir: Path = typer.Option(
-            "../data/raw/", help="Path to the train_labels csv and val_labels csv"
+            "./data/raw/", help="Path to the train_labels csv and val_labels csv"
         ),
         metadata_path: Path = typer.Option(
-            "../data/raw/metadata.csv", help="Path to the metadata csv"
+            "./data/raw/metadata.csv", help="Path to the metadata csv"
         ),
         debug: bool = typer.Option(
             False, help="Run on a small subset of the data and a two folds for debugging"

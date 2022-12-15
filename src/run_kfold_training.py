@@ -10,16 +10,16 @@ from src.training_utils import train_fixed_soup
 
 def main(
         model_dir: Path = typer.Option(
-            "../data/processed/", help="Directory to save the output model weights in npy format"
+            "./data/processed/", help="Directory to save the output model weights in npy format"
         ),
         features_dir: Path = typer.Option(
-            "../data/raw/", help="Path to the raw features"
+            "./data/raw/", help="Path to the raw features"
         ),
         labels_dir: Path = typer.Option(
-            "../data/raw/", help="Path to the train_labels csv and val_labels csv"
+            "./data/raw/", help="Path to the train_labels csv and val_labels csv"
         ),
         metadata_path: Path = typer.Option(
-            "../data/raw/metadata.csv", help="Path to the metadata csv"
+            "./data/raw/metadata.csv", help="Path to the metadata csv"
         ),
         n_folds: int = typer.Option(
             10, help="Number of folds, Must be at least 2"
