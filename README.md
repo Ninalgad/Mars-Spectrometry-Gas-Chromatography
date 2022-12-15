@@ -20,6 +20,11 @@ For convenience I have provided `src/run_single_training.py` as a simple use cas
 conda create --name ms2gs-submission python=3.8
 ```
 
+then activate the environment
+```
+conda activate ms2gs-submission
+```
+
 2. Install the required Python packages:
 ```
 pip install -r requirements.txt
@@ -75,8 +80,8 @@ The solution was run on a Google colab notebook
 - GPU: Tesla T4
 
 Both training and inference were run on GPU.
-- Training time: ~2 hours
-- Inference time: ~1 hour
+- Training time: ~ 2 hours
+- Inference time: ~ 15 mins
 
 # Run training
 
