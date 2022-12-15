@@ -15,6 +15,12 @@ For convenience I have provided `src/run_single_training.py` as a simple use cas
 
 # Setup
 
+0. Clone and change the directory
+```
+git clone https://github.com/Ninalgad/Mars-Spectrometry-Gas-Chromatography.git
+cd Mars-Spectrometry-Gas-Chromatography
+```
+
 1. Create an environment using Python 3.8. The solution was originally run on Python 3.8.16. 
 ```
 conda create --name ms2gs-submission python=3.8
