@@ -30,6 +30,12 @@ conda activate ms2gs-submission
 pip install -r requirements.txt
 ```
 
+(Optional) for GPU accelerated environments:
+
+```
+pip install tensorflow-gpu==2.9.2
+```
+
 3. Download the data from the competition page (and unzip) into `data/raw`
 
 The structure of the directory before running training or inference should be:
