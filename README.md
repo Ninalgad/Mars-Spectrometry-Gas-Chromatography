@@ -1,5 +1,7 @@
 # 5th Place Winning Solution - Mars Spectrometry 2: Gas Chromatography
 
+[1st Place Write-Up](writeup-final.pdf)
+
 Username: jackson5
 
 ## Summary
